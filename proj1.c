@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
     }
 
     return 0;
+    
 }
 
 // encrypt letters with a caesar cipher with the specified shift
