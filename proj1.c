@@ -1,114 +1,107 @@
-//shifting the order of the alphabet based on th input argument
+/*Assignmnet one
+typign a code that cyphers or decyphers a given input.
+types of cyphers: Caeser (rotation) Cypher and Substitution Cypher
+types of rotation cyphers:
+1 rotation with key (asking for the key(shift) from the user)
+2 rotation without key (where I got my own key inside the code)*/
 
-/*What else I need to do is:
-1) modify the code to be in the file I/O form
-2) add the substitution Cypher
-3) Have teh deycription for both cyphers made
-4) Have the programming running a window of menu options:
-...A) a rotation Encryption with Key
-...B) a rotation Decryption with Key
-...C) a rotation Encryption without key
-...D) a rotation Decryption without key
-...E) a substitution Encryption
-...F) a substitution Deycription.
-*/
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define ALPHABET_SIZE  26
-#define MAXCHAR 1024
-#define HIDDEN_KEY 32
-
-//Types of cyphers:
-int encrypt(int character, int shift);
-int decrypt(int character, int shift);
-//char substitute(char character [MAXCHAR]);//TODO
-//int desubstitute(int character, int shift);//TODO
+#define MAXCHAR 10240//this can be changed if the input text is larger than 1024 characters
+#define HIDDEN_KEY 7//this can be changed without altering the code itself.
 
 int main(void) {
 	//Choosing the desired option of Cypher.
     printf ("Choose one of the following cypher options: \n");
-    printf ("1)A Rotation Encryption Cypher with key.\n");
-    printf ("2)A Rotation Decryption Cypher with key.\n");
-    printf ("3)A Rotation Encryption Cypher without Key.\n");
-    printf ("4)A Rotation Decrypthion Cypher without key.\n");
-    printf ("5)A Substitution Encryption Cypher.\n");
-    printf ("6)A Substitution Decryption Cypher.\n");
+    printf ("a)A Rotation Encryption Cypher without Key.\n");
+    printf ("b)A Rotation Decrypthion Cypher without key.\n");
+    printf ("c)A Rotation Encryption Cypher with key.\n");
+    printf ("d)A Rotation Decryption Cypher with key.\n");
+    printf ("e)A Substitution Encryption Cypher.\n");
+    printf ("f)A Substitution Decryption Cypher.\n");
 
-    int option;
-    scanf ("%d", &option);
-    if (option == 1) {
-	//the rotation cypher with the key
-	//type in the key or "shift" to make the rotation
-	// then type in text to be cyphered.
-    	int shift;
-    	printf ("Assign a value for the Key: \n");
-    	scanf ("%d", &shift);
-    	//Making sure that the key is not Zero
-    	if (shift == 0) {
-    		printf ("You have entered a zero value for the Key\nTry Again\n");
-    		return 0;
-    	}
-    	printf ("Type the text to cypher it:\n");
-    	scanf ("\n");
-	    int character = getchar();
-	    while (character != EOF) {
-	        int encrypted_character = encrypt(character, shift);
-	        //printf ("Cyphered text:\n");
-	        putchar(encrypted_character);
-	        //printf ("\n");
-	        character = getchar();
-	    }
-    } else if (option == 2) {
-	//the reverse of the rotation cypher 
-	//typing cyphered text to get its original.
-		int shift = 0;
-		printf ("Assign a value for the Key: \n");
-		scanf ("%d", &shift);
-    	if (shift == 0) {
-			printf ("You have entered a zero value for the key\nTry Again\n");
-			return 0;
+    char option;
+    int i = 0;
+	char character[MAXCHAR];
+    scanf ("%c", &option);
+    //Options to choose which cypher.
+	if (option == 'a') {
+		//Encryption without a key.	
+		printf ("Enter a text to be encrypted:\n");
+		scanf ("\n%[^\n]s\n", character);
+		i = 0;//To start form the begining of the scanned string
+		while (i < MAXCHAR) {
+			if (character[i] <= 'Z' && character[i] >= 'A') {
+				character[i] = 'A' + (character[i] - 'A' + HIDDEN_KEY)%ALPHABET_SIZE;
+			}//A shift of 32 is the difference between the lower and upper cases in the ASCII table
+			else if (character[i] <= 'z' && character[i] >= 'a') {
+				character[i] = 'A' + (character[i] - 'A' - 32 + HIDDEN_KEY)%ALPHABET_SIZE;
+			}
+			i++;
 		}
-		printf ("Type text to be Decypghered:\n");
-	    int character = getchar();
-	    while (character != EOF) {
-	        int decrypted_character = decrypt(character, shift);
-	        //printf ("Cyphered text:\n");
-	        putchar(decrypted_character);
-	        character = getchar();
-	    }
-	} else if (option == 3) {
-    	int shift = HIDDEN_KEY;
-    	//printf ("assign the value of the shift: \n");
-    	//scanf ("%d", &shift);
-    	printf ("Type the text to cypher it:\n");
-	    int character = getchar();
-	    while (character != EOF) {
-	        int encrypted_character = encrypt(character, shift);
-	       // printf ("Cyphered text:\n");
-	        putchar(encrypted_character);
-	        character = getchar();
-	    }
-	} else if (option == 4) {
-		int shift = HIDDEN_KEY;
-		//printf ("assign the value of the shift: \n");
-		//scanf ("%d", &shift);
-		printf ("Type text to be Decypghered:\n");
-	    int character = getchar();
-	    while (character != EOF) {
-	        int decrypted_character = decrypt(character, shift);
-	        //printf ("Cyphered text:\n");
-	        putchar(decrypted_character);
-	        character = getchar();
-        }
-	} else if (option == 5) {
-	//the substitution Cypher
-		printf ("Type in text to be cyphered: \n");
-		scanf ("\n");
-		char character [MAXCHAR];
-		scanf("%[^\n]s\n",character);
-		int i = 0;
+		printf ("The encrypted text is:\n%s\n", character);
+	} else if (option == 'b') {
+		//Decyption without a key
+		printf ("Enter a text to be decrypted:\n");
+		scanf ("\n%[^\n]s\n", character);
+		i = 0;
+		while (i < MAXCHAR) {
+			if (character[i] <= 'Z' && character[i] >= 'A') {
+				character[i] = 'A' + (character[i] + 'A' - HIDDEN_KEY)%ALPHABET_SIZE;
+			}
+			else if (character[i] <= 'z' && character[i] >= 'a') {
+				character[i] = 'A' + (character[i] + 'A' - 32 - HIDDEN_KEY)%ALPHABET_SIZE;
+			}
+			i++;
+		} 
+		printf ("The decrypted text is:\n%s\n", character);
+	} else if (option == 'c') {
+	//The rotation cypher with key
+	//Type in the key or "shift" BEFORE entering the text.
+    	int KEY;
+    	printf ("Please Assign the Key for the cypher:\n");
+    	scanf ("%d", &KEY);
+		printf ("Enter a text to be encrypted:\n");
+		scanf ("\n%[^\n]s\n", character);
+		i = 0;
+		while (i < MAXCHAR) {
+			if (character[i] <= 'Z' && character[i] >= 'A') {
+				character[i] = 'A' + (character[i] - 'A' + KEY)%ALPHABET_SIZE;
+			}
+			else if (character[i] <= 'z' && character[i] >= 'a') {
+				character[i] = 'A' + (character[i] - 'A' - 32 + KEY)%ALPHABET_SIZE;
+			}
+			i++;
+		} 
+		printf ("The encrypted text is:\n%s\n", character);
+    } else if (option == 'd') {
+	//The reverse of the rotation cypher 
+	//Type in cyphered text to get its original.
+    	int KEY;
+    	printf ("Please Assign the Key for the cypher:\n");
+    	scanf ("%d", &KEY);
+		printf ("Enter a text to be decrypted:\n");
+		scanf ("\n%[^\n]s\n", character);
+		i = 0;
+		while (i < MAXCHAR) {
+			if (character[i] <= 'Z' && character[i] >= 'A') {
+				character[i] = 'A' + (character[i] + 'A' - KEY)%ALPHABET_SIZE;
+			}
+			else if (character[i] <= 'z' && character[i] >= 'a') {
+				character[i] = 'A' + (character[i] + 'A' - 32 - KEY)%ALPHABET_SIZE;
+			}
+			i++;
+		} 
+		printf ("The decrypted text is:\n%s\n", character);
+	} else if (option == 'e') {
+	//The substitution Cypher, is based on this substitution:
+	//ABC DEFGH IJKL MNOPQR STUV WXYZ
+	//CWM FJORD BANK GLYPHZ VEXT QUIS
+		printf ("Type in text to be cyphered:\n");
+		scanf("\n%[^\n]s\n",character);
+		i = 0;
 		while (i < MAXCHAR) {
 			if (character [i] == 'A' ||character [i] == 'a') {
 				character [i] = 'C';
@@ -165,16 +158,17 @@ int main(void) {
 			}
 			i++;
 		}
-		//printf ("Cyphered text:\n");
-		printf ("%s\n", character);
-    } else if (option == 6) {
-	//reverse the substitution cypher.
-	//typing cyphered text to get its original.
+		printf ("The cyphered text is:\n");
+		printf ("%s\nBased on this Substitution:\n", character);
+		printf("ABC DEFGH IJKL MNOPQR STUV WXYZ\nCWM FJORD BANK GLYPHZ VEXT QUIS\n");
+    } else if (option == 'f') {
+	//Reverse the substitution cypher, based on the following substitution:
+    //CWM FJORD BANK GLYPHZ VEXT QUIS
+	//ABC DEFGH IJKL MNOPQR STUV WXYZ
+	//Typing cyphered text to get its original.
     	printf ("Type in text to be decyphered: \n");
-		scanf ("\n");
-		char character [MAXCHAR];
-		int i = 0;
-		scanf("%[^\n]s",character);
+		i = 0;
+		scanf("\n%[^\n]s",character);
 		while (i < MAXCHAR) {
 			if (character [i] == 'C' ||character [i] == 'c') {
 				character [i] = 'A';
@@ -231,35 +225,11 @@ int main(void) {
 			}
 			i++;
 		}
-		//printf ("Cyphered text:\n");
-		printf ("%s\n", character);
+		printf ("The cyphered text is:\n");
+		printf ("%s\nBased on this Substitution:\n", character);
+		printf("ABC DEFGH IJKL MNOPQR STUV WXYZ\nCWM FJORD BANK GLYPHZ VEXT QUIS\n");
     } else {
-    	printf ("You have entered something outside the menue given\n please choose from the menu\n");
+    	printf ("You have entered something outside the menue given\nPlease choose from the menu\n");
     }
     return 0;
-}
-
-// Encrypt letters with a caesar(rotation)cipher with the specified shift
-// the specified characters is returned shifted the specified number of positions
-// characters other than letters are returned unchanged
-
-int encrypt(int character, int shift) {
-    if (character >= 'A' && character <= 'Z') {
-        return 'A' + (character - 'A' + shift) % ALPHABET_SIZE;
-    } else if (character >= 'a' && character <= 'z') {
-        return 'A' + (character - 32 - 'A' + shift) % ALPHABET_SIZE;
-    } else {
-        return character;
-    }
-}
-
-int decrypt(int character, int shift) {
-	if (character >= 'A' && character <= 'Z') {
-		return 'A' + (character + 'A' - shift) % ALPHABET_SIZE;
-	} else if (character >= 'a' && character <= 'z'){
-			return 'A' + (character - 32 + 'A' - shift) % ALPHABET_SIZE;
-	} 
-	else {
-		return character;
-	}
 }
